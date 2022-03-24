@@ -55,4 +55,21 @@ Expected format: Vector3
 
 GUID: c5b83134-3b07-4f91-8edb-44c26e890eaf
 
-Expected format: Not yet implemented
+Expected format: URDF
+
+```xml
+<?xml version="1.0"?>
+<obstacles name="Obstacle_description_v1">
+
+    <!-- T-shaped bar at (0 0 10)-->
+    <obstacle object_type="Static_Pillar" location="0 0 10"/>
+    <obstacle object_type="Static_Pillar" location="0 10 10" rotation="0 0 90"/>
+
+    <!-- Box around (0 5 -10)-->
+    <obstacle object_type="Static_Wall" location="0 5 -15" rotation="0 0 0"/>
+    <obstacle object_type="Static_Wall" location="5 5 -10" rotation="0 90 0"/>
+    <obstacle object_type="Static_Wall" location="0 5 -5" rotation="0 0 0"/>
+    <obstacle object_type="Static_Wall" location="-5 5 -10" rotation="0 90 0"/>
+
+</obstacles>
+```
