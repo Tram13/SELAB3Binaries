@@ -1,4 +1,15 @@
-# SEL3 Binary
+# Unity Environment
+
+## Controls
+
++ Camera movement: arrow keys
++ Camera zoom: p-m
++ Take screenshot: s
+
+## Editor only controls
+
++ Select joint: scroll wheel
++ Move selected joint: a-e
 
 ## Sidechannels
 
@@ -25,7 +36,19 @@ Expected format: URDF
     <link name="MODULE_1">
         <visual>
             <geometry>
+                <!--Base modules are straight modules with variable length-->
                 <base_module length="3.0"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!--Links are allowed to be out of order-->
+    <!--Names should be unique-->
+    <link name="MODULE_2">
+        <visual>
+            <geometry>
+                <!--Hook modules contain a 90° bend with a rotation towards their parent-->
+                <hook_module rotation="90.0"/>
             </geometry>
         </visual>
     </link>
@@ -55,21 +78,44 @@ Expected format: Vector3
 
 GUID: c5b83134-3b07-4f91-8edb-44c26e890eaf
 
-Expected format: URDF
+Expected format: xml
 
 ```xml
 <?xml version="1.0"?>
-<obstacles name="Obstacle_description_v1">
+<obstacles name="Obstacle_description_v4">
 
-    <!-- T-shaped bar at (0 0 10)-->
-    <obstacle object_type="Static_Pillar" location="0 0 10"/>
-    <obstacle object_type="Static_Pillar" location="0 10 10" rotation="0 0 90"/>
+    <!-- T-shaped bar at 0 0 10 -->
+    <obstacle object_type="Container" location="0 0 10">
+        <obstacle object_type="Pillar" location="0 3 0" scale="1 0.5 1"/>
+        <obstacle object_type="Pillar" location="0 6 0" rotation="0 0 90"/>
+    </obstacle>
 
-    <!-- Box around (0 5 -10)-->
-    <obstacle object_type="Static_Wall" location="0 5 -15" rotation="0 0 0"/>
-    <obstacle object_type="Static_Wall" location="5 5 -10" rotation="0 90 0"/>
-    <obstacle object_type="Static_Wall" location="0 5 -5" rotation="0 0 0"/>
-    <obstacle object_type="Static_Wall" location="-5 5 -10" rotation="0 90 0"/>
-
+    <!-- Box around 0 0 -10 -->
+    <obstacle object_type="Container" location="0 0 -10">
+        <!-- lerp allows for movement -->
+        <lerp duration="10" target-rotation="0 90 0" mode="repeat"/>
+        <obstacle object_type="Wall" location="0 3 -3"/>
+        <obstacle object_type="Wall" location="3 3 0" rotation="0 90 0"/>
+        <obstacle object_type="Wall" location="0 3 3"/>
+        <obstacle object_type="Wall" location="-3 3 0" rotation="0 90 0"/>
+    </obstacle>
 </obstacles>
 ```
+
+Alternate message: "Clear" (Clears all obstacles)
+
+### Logging side channel
+
+GUID: ee1c1c99-7540-474e-8938-656df7ec81de
+
+Expected format: None
+
+This sidechannel exfiltrates any Debug message created by the Unity environment
+
+### Snapshot side channel
+
+GUID: 43ea94d6-2d2b-4661-b7cd-df5bc998793f
+
+Expected format: Filename
+
+Note: make sure the folder you are writing to exists!
