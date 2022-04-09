@@ -10,6 +10,7 @@
 
 + Select joint: scroll wheel
 + Move selected joint: a-e
++ Reset joints: r
 
 ## Sidechannels
 
@@ -73,6 +74,17 @@ GUID: 26013736-a87f-4c0c-b0ee-fdce6b3b45ff
 Expected format: Vector3
 
 `<x> <y> <z>`
+
+### Workspace side channel
+
+GUID: 34e11e85-f324-4d83-97dc-ca22c9043fd1
+
+Expected format: Vector3
+
+`<x> <y> <z>`
+
+Alternate message: "Clear" (Clears display)
+
 
 ### Obstacle side channel
 
