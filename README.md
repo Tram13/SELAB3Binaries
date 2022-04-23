@@ -12,6 +12,19 @@
 + Move selected joint: a-e
 + Reset joints: r
 
+## Observation vector
+
+For every joint:
+
++ Target angle
++ Current angle
++ Current joint posistion (x,y,z)
++ Collisions (Arm, Ground, Obstacle)
+
+Suffix:
+
++ Current end effector posistion (x,y,z)
+
 ## Sidechannels
 
 ### Creation side channel
@@ -85,7 +98,6 @@ Expected format: Vector3
 
 Alternate message: "Clear" (Clears display)
 
-
 ### Obstacle side channel
 
 GUID: c5b83134-3b07-4f91-8edb-44c26e890eaf
@@ -131,3 +143,11 @@ GUID: 43ea94d6-2d2b-4661-b7cd-df5bc998793f
 Expected format: Filename
 
 Note: make sure the folder you are writing to exists!
+
+### Text display side channel
+
+GUID: 3f64a11e-480a-444d-8dca-15be95f1f7ee
+
+Expected format: Plain text
+
+Displays plain text in top right corner
