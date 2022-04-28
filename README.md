@@ -62,7 +62,8 @@ Expected format: URDF
         <child link="MODULE_1"/>
         <!--axis and dof are optional elements-->
         <axis xyz="0 1 0"/>
-        <dof minAngle="-170.0" maxAngle="170.0"/>
+        <!--minAngle and maxAngle should be multiples of stepSize-->
+        <dof minAngle="-170.0" maxAngle="170.0" stepSize="5.0"/>
     </joint>
 </robot>
 ```
@@ -84,7 +85,6 @@ Expected format: Vector3
 `<x> <y> <z>`
 
 Alternate message: "Clear" (Clears display)
-
 
 ### Obstacle side channel
 
@@ -131,3 +131,11 @@ GUID: 43ea94d6-2d2b-4661-b7cd-df5bc998793f
 Expected format: Filename
 
 Note: make sure the folder you are writing to exists!
+
+### Text display side channel
+
+GUID: 3f64a11e-480a-444d-8dca-15be95f1f7ee
+
+Expected format: Plain text
+
+Displays plain text in top right corner
