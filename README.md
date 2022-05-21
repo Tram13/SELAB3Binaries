@@ -3,14 +3,31 @@
 ## Controls
 
 + Camera movement: arrow keys
-+ Camera zoom: p-m
++ Camera zoom: scroll wheel
 + Take screenshot: s
 
 ## Editor only controls
 
-+ Select joint: scroll wheel
-+ Move selected joint: a-e
++ Select joint: z-x
++ Move selected joint: a-e; q-d; w-c
 + Reset joints: r
+
+## Observation vector
+
+For every joint:
+
++ Target angle
++ Current angle
++ Current joint posistion (x,y,z)
++ Collisions (Arm, Ground, Obstacle)
+
+End effector:
+
++ Current end effector posistion (x,y,z)
+
+For every sensor:
+
++ Distance to nearest obstacle, normalized by max range; If nothing is detected, distance is 1
 
 ## Sidechannels
 
@@ -38,24 +55,40 @@ Expected format: URDF
         <visual>
             <geometry>
                 <!--Base modules are straight modules with variable length-->
-                <base_module length="3.0"/>
+                <base_module length="3.0" rotation="0.0"/>
             </geometry>
         </visual>
     </link>
 
-    <!--Links are allowed to be out of order-->
-    <!--Names should be unique-->
     <link name="MODULE_2">
         <visual>
             <geometry>
                 <!--Hook modules contain a 90° bend with a rotation towards their parent-->
-                <hook_module rotation="90.0"/>
+                <hook_module rotation="45.0"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="MODULE_3">
+        <visual>
+            <geometry>
+                <!--Telescopic modules can extend up to their length, but do not have a revolute joint-->
+                <telescopic_module length="2.0" rotation="0.0"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="MODULE_4">
+        <visual>
+            <geometry>
+                <!--Short modules don't have a body, they allow multiple degrees of freedom between two module bodies-->
+                <short_module rotation="0.0"/>
             </geometry>
         </visual>
     </link>
 
     <!--Joints are allowed to be out of order-->
-    <joint name="MODULE_1_JOINT" type="revolute">
+    <joint name="MODULE_1_JOINT">
         <!--For each parent, there should be at most one joint-->
         <parent link="anchor"/>
         <!--Linking an earlier element here will cause infinite recursion-->
@@ -64,9 +97,26 @@ Expected format: URDF
         <axis xyz="0 1 0"/>
         <!--minAngle and maxAngle should be multiples of stepSize-->
         <dof minAngle="-170.0" maxAngle="170.0" stepSize="5.0"/>
+        <!--spring is optional, decides how stable the joint is-->
+        <spring stiffness="1000000" damping="100000"/>
     </joint>
+
+    <!--Sensors will be sorted by parent-->
+    <sensor name="SENSOR_1" range="3.0">
+        <parent link="MODULE_4"/>
+        <!--axis is optional, default is 0 1 0-->
+        <axis xyz="0 1 0"/>
+    </sensor>
 </robot>
 ```
+
+### Set position side channel
+
+GUID: 9066f9e9-6050-4198-b8a9-fa2330252ff6
+
+Expected format: List of floats
+
+`<p1> <p2> <p3> ...`
 
 ### Target side channel
 
@@ -75,6 +125,11 @@ GUID: 26013736-a87f-4c0c-b0ee-fdce6b3b45ff
 Expected format: Vector3
 
 `<x> <y> <z>`
+
+Returns:
+
++ 200 (Success) if succeeded
++ 409 (Conflict) when the target overlaps with obstacles
 
 ### Workspace side channel
 
